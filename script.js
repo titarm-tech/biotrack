@@ -1,7 +1,6 @@
-console.log("initialisation de la carte");
+console.log("Initialisation de la carte");
 
 try {
-    console.log("try");
     document.getElementById('map-placeholder').style.display = 'none';
     document.getElementById('map').style.display = 'block';
 
@@ -11,36 +10,122 @@ try {
         maxZoom: 19,
     }).addTo(map);
 
-    // Chargement du JSON
-    fetch("sharks-2019.json")
-        .then(res => res.json())
-        .then(data => {
-            data.individuals.forEach(shark => {
-                if (!shark.locations || shark.locations.length === 0) return;
+    // Store markers per shark name
+    const markers = {};
 
-                // Dernière position connue
-                const last = shark.locations[shark.locations.length - 1];
-                const lat = last.lat;
-                const lng = last.lng;
+    // Toggle a single shark's visibility
+    function toggleShark(name, visible) {
+        if (visible) {
+            markers[name].marker.addTo(map);
+        } else {
+            map.removeLayer(markers[name].marker);
+        }
+    }
 
-                const weight  = shark.weight  != null ? shark.weight  + " kg" : "N/A";
-                const length  = shark.length  != null ? shark.length  + " cm" : "N/A";
+    // Update the global checkbox state based on individual checkboxes
+    function updateGlobalCheckbox() {
+        var checkboxes = document.querySelectorAll('#shark-list input[type="checkbox"]');
+        var allChecked = true;
+        var noneChecked = true;
 
-                L.marker([lat, lng])
-                    .addTo(map)
-                    .bindPopup(`
-                        <strong>${shark.name}</strong><br>
-                        🦈 ${shark.species}<br>
-                        ${shark.gender}<br>
-                        ⚖️ ${weight} &nbsp;|&nbsp; 📏 ${length}<br>
-                        📅 ${last.timestamp}
-                    `);
+        checkboxes.forEach(function (cb) {
+            if (cb.checked) { noneChecked = false; }
+            else { allChecked = false; }
+        });
+
+        var globalCb = document.getElementById('cb-global');
+        globalCb.checked = allChecked;
+        globalCb.indeterminate = !allChecked && !noneChecked;
+    }
+
+    // Build sidebar list and markers from data
+    function loadSharks(data) {
+        var list = document.getElementById('shark-list');
+
+        data.individuals.forEach(function (shark) {
+            if (!shark.locations || shark.locations.length === 0) return;
+
+            // Create marker
+            var last = shark.locations[shark.locations.length - 1];
+            var weight = shark.weight != null ? shark.weight + " kg" : "N/A";
+            var length = shark.length != null ? shark.length + " cm" : "N/A";
+
+            var marker = L.marker([last.lat, last.lng])
+                .addTo(map)
+                .bindPopup(
+                    "<strong>" + shark.name + "</strong><br>" +
+                    "🦈 " + shark.species + "<br>" +
+                    shark.gender + "<br>" +
+                    "⚖️ " + weight + " | 📏 " + length + "<br>" +
+                    "📅 " + last.timestamp
+                );
+
+            markers[shark.name] = { marker: marker, lat: last.lat, lng: last.lng };
+
+            // Create list item
+            var li = document.createElement('li');
+
+            // Target icon to zoom to shark
+            var target = document.createElement('span');
+            target.className = 'shark-target';
+            target.textContent = '🎯';
+            target.title = 'Centrer sur ' + shark.name;
+            target.addEventListener('click', function () {
+                var info = markers[shark.name];
+                // Make sure the shark is visible
+                var cb = document.getElementById('cb-' + shark.name);
+                if (!cb.checked) {
+                    cb.checked = true;
+                    toggleShark(shark.name, true);
+                    updateGlobalCheckbox();
+                }
+                map.setView([info.lat, info.lng], 8);
+                info.marker.openPopup();
             });
-        })
-        .catch(err => console.error("Erreur chargement JSON :", err));
+
+            // Checkbox
+            var checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.checked = true;
+            checkbox.id = 'cb-' + shark.name;
+            checkbox.addEventListener('change', function () {
+                toggleShark(shark.name, this.checked);
+                updateGlobalCheckbox();
+            });
+
+            // Label (clicking it toggles the checkbox)
+            var label = document.createElement('label');
+            label.className = 'shark-name';
+            label.textContent = shark.name;
+            label.htmlFor = 'cb-' + shark.name;
+
+            li.appendChild(checkbox);
+            li.appendChild(label);
+            li.appendChild(target);
+            list.appendChild(li);
+        });
+    }
+
+    // Setup global checkbox
+    document.getElementById('cb-global').addEventListener('change', function () {
+        var checked = this.checked;
+        var checkboxes = document.querySelectorAll('#shark-list input[type="checkbox"]');
+
+        checkboxes.forEach(function (cb) {
+            cb.checked = checked;
+            var name = cb.id.replace('cb-', '');
+            toggleShark(name, checked);
+        });
+    });
+
+    // Load JSON data
+    fetch("sharks-2019.json")
+        .then(function (res) { return res.json(); })
+        .then(function (data) { loadSharks(data); })
+        .catch(function (err) { console.error("Erreur chargement JSON :", err); });
 
 } catch (e) {
     document.getElementById('map-placeholder').style.display = 'flex';
     document.getElementById('map').style.display = 'none';
-    console.error("error dinitialisation de la carte ", e);
+    console.error("Erreur d'initialisation de la carte :", e);
 }
