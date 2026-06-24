@@ -119,7 +119,7 @@ try {
     });
 
     // Load JSON data
-    fetch("sharks-2019.json")
+    fetch("data/sharks-2019.json")
         .then(function (res) { return res.json(); })
         .then(function (data) { loadSharks(data); })
         .catch(function (err) { console.error("Erreur chargement JSON :", err); });
