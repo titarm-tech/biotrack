@@ -13,35 +13,55 @@
 
 <body>
 
-<!-- HEADER -->
-<header>
-  <span class="logo">BioTrack</span>
-</header>
+  <!-- HEADER -->
+  <header>
+    <span class="logo">BioTrack</span>
+  </header>
 
-<!-- MAIN -->
-<main>
-  <aside id="sidebar">
-    <div class="sidebar-header">
-      <input type="checkbox" id="cb-global" checked />
-      <label for="cb-global">Requins</label>
+  <!-- MAIN -->
+  <main>
+    <aside id="sidebar">
+      <div class="sidebar-year">
+        <label for="year-select">Année</label>
+        <select id="year-select">
+          <option value="2012">2012</option>
+          <option value="2013">2013</option>
+          <option value="2014">2014</option>
+          <option value="2015">2015</option>
+          <option value="2016">2016</option>
+          <option value="2017">2017</option>
+          <option value="2018">2018</option>
+          <option value="2019" selected>2019</option>
+        </select>
+      </div>
+
+
+
+
+
+
+
+      <div class="sidebar-header">
+        <input type="checkbox" id="cb-global" checked />
+        <label for="cb-global">Requins</label>
+      </div>
+      <ul id="shark-list"></ul>
+    </aside>
+
+    <div id="map-wrapper">
+      <div id="map-placeholder">La carte Leaflet s'affichera ici</div>
+      <div id="map" style="display:none;"></div>
     </div>
-    <ul id="shark-list"></ul>
-  </aside>
+  </main>
 
-  <div id="map-wrapper">
-    <div id="map-placeholder">La carte Leaflet s'affichera ici</div>
-    <div id="map" style="display:none;"></div>
-  </div>
-</main>
+  <!-- FOOTER -->
+  <footer>
+    <p class="footer-copy">BioTrack &copy; 2026</p>
+  </footer>
 
-<!-- FOOTER -->
-<footer>
-  <p class="footer-copy">BioTrack &copy; 2026</p>
-</footer>
-
-<!-- Leaflet JS -->
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="script.js"></script>
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="script.js"></script>
 
 </body>
 
