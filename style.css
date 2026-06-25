@@ -27,19 +27,35 @@ body {
 
 body {
     display: flex;
-    flex-direction: column;
-    min-height: 100vh;
+    overflow: hidden;
 }
 
-/* ── Header ── */
+/* ── Sidebar (left column) ── */
+#sidebar {
+    width: 260px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: var(--white);
+    border-right: 1px solid var(--separator);
+    flex-shrink: 0;
+}
+
+.sidebar-content {
+    flex: 1;
+    overflow-y: auto;
+}
+
+/* ── Header (inside sidebar) ── */
 header {
     background: var(--white);
     border-bottom: 1px solid var(--separator);
     padding: 0 20px;
     height: 56px;
     display: flex;
-    border: 1px solid var(--separator);
     align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
 }
 
 header .logo {
@@ -49,28 +65,34 @@ header .logo {
     letter-spacing: -0.5px;
 }
 
-/* ── Main ── */
-main {
-    flex: 1;
-    display: flex;
-    overflow: hidden;
-}
-
-/* ── Sidebar ── */
-#sidebar {
-    width: 260px;
-    background: var(--white);
-    border-right: 1px solid var(--separator);
-    overflow-y: auto;
+/* ── Footer (inside sidebar) ── */
+footer {
+    background: var(--bg-dark);
+    padding: 1rem 1.2rem;
     flex-shrink: 0;
 }
 
+.footer-copy {
+    font-size: 0.8rem;
+    color: var(--soft-gray);
+}
+
+.footer-copy a {
+    color: var(--soft-gray);
+    text-decoration: none;
+}
+
+.footer-copy a:hover {
+    color: var(--white);
+}
+
+/* ── Sidebar sections ── */
 .sidebar-year {
     padding: 1rem;
     border-bottom: 1px solid var(--separator);
     display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .sidebar-year label {
@@ -160,18 +182,16 @@ main {
     color: var(--ocean);
 }
 
-/* ── Map container ── */
+/* ── Map (right column) ── */
 #map-wrapper {
     flex: 1;
-    background: var(--white);
+    height: 100vh;
     overflow: hidden;
-    min-height: 400px;
 }
 
 #map {
     width: 100%;
     height: 100%;
-    min-height: 400px;
 }
 
 #map-placeholder {
@@ -179,24 +199,11 @@ main {
     align-items: center;
     justify-content: center;
     height: 100%;
-    min-height: 400px;
     color: var(--soft-gray);
     font-size: 1rem;
 }
 
-/* ── Footer ── */
-footer {
-    background: var(--bg-dark);
-    padding: 1.5rem 2rem;
-}
-
-/* Copyright line */
-.footer-copy {
-    font-size: 0.8rem;
-    color: var(--soft-gray);
-}
-
-
+/* ── Search ── */
 .sidebar-search {
     padding: 0.75rem 1rem;
     border-bottom: 1px solid var(--separator);
@@ -217,10 +224,7 @@ footer {
     border-color: var(--ocean);
 }
 
-header {
-    justify-content: space-between;
-}
-
+/* ── Dark mode toggle ── */
 #btn-dark {
     background: none;
     border: 1px solid var(--separator);
@@ -237,6 +241,15 @@ body.dark {
 body.dark #sidebar {
     background: #2c2c2e;
     border-color: rgba(255, 255, 255, 0.08);
+}
+
+body.dark header {
+    background: #2c2c2e;
+    border-color: rgba(255, 255, 255, 0.08);
+}
+
+body.dark footer {
+    background: #1c1c1e;
 }
 
 body.dark .sidebar-year select,
@@ -259,16 +272,12 @@ body.dark #shark-list li:hover {
     background: rgba(255, 255, 255, 0.07);
 }
 
-body.dark header {
-    background: #2c2c2e;
-    border-color: rgba(255, 255, 255, 0.08);
-}
-
 body.dark #btn-dark {
     border-color: rgba(255, 255, 255, 0.15);
     color: var(--white);
 }
 
+/* ── Filters ── */
 .sidebar-filter {
     padding: 0.75rem 1rem;
     border-bottom: 1px solid var(--separator);
@@ -343,6 +352,7 @@ body.dark #btn-dark {
     gap: 0.4rem;
 }
 
+/* ── Accordion ── */
 .accordion-header {
     display: flex;
     justify-content: space-between;
