@@ -1,17 +1,24 @@
 /* ── Palette ── */
 :root {
-    --ocean:     #1565A7;
-    --mist:      #F4F9FC;
+    --ocean: #1565A7;
+    --mist: #F4F9FC;
     --soft-gray: #8899A6;
     --separator: rgba(21, 101, 167, 0.15);
-    --white:     #ffffff;
+    --white: #ffffff;
     --text-dark: #1a2b3c;
-    --bg-dark:   #1c1c1e;
+    --bg-dark: #1c1c1e;
 }
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 
-html, body {
+html,
+body {
     height: 100%;
     font-family: 'Segoe UI', system-ui, sans-serif;
     background: var(--mist);
@@ -210,32 +217,54 @@ footer {
     border-color: var(--ocean);
 }
 
+header {
+    justify-content: space-between;
+}
 
+#btn-dark {
+    background: none;
+    border: 1px solid var(--separator);
+    border-radius: 6px;
+    padding: 0.3rem 0.6rem;
+    cursor: pointer;
+    font-size: 1rem;
+}
 
+body.dark {
+    background: var(--bg-dark);
+}
 
+body.dark #sidebar {
+    background: #2c2c2e;
+    border-color: rgba(255, 255, 255, 0.08);
+}
 
+body.dark .sidebar-year select,
+body.dark .sidebar-search input {
+    background: #3a3a3c;
+    border-color: rgba(255, 255, 255, 0.1);
+    color: var(--white);
+}
 
+body.dark .sidebar-year label,
+body.dark .sidebar-header label {
+    color: #aaa;
+}
 
+body.dark #shark-list .shark-name {
+    color: #e0e0e0;
+}
 
+body.dark #shark-list li:hover {
+    background: rgba(255, 255, 255, 0.07);
+}
 
+body.dark header {
+    background: #2c2c2e;
+    border-color: rgba(255, 255, 255, 0.08);
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+body.dark #btn-dark {
+    border-color: rgba(255, 255, 255, 0.15);
+    color: var(--white);
+}
