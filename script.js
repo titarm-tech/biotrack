@@ -3,11 +3,20 @@ console.log("Initialisation de la carte");
 try {
     // Store markers per shark name
     const markers = {};
-
+    const colors = [
+        '#E63946', '#2A9D8F', '#E9C46A', '#F4A261', '#264653',
+        '#6A4C93', '#1982C4', '#8AC926', '#FF595E', '#FFCA3A',
+        '#6A994E', '#C77DFF', '#F77F00', '#4CC9F0', '#D62828',
+        '#3A86FF', '#FB5607', '#8338EC', '#06D6A0', '#FFB703',
+        '#CB4335', '#1A5276', '#148F77', '#D35400', '#7D3C98'
+    ];
+    let colorIndex = 0;
     function clearSharks() {
         console.log("clearSharks");
         Object.values(markers).forEach(function (info) {
             map.removeLayer(info.marker);
+            map.removeLayer(info.polyline);
+            info.dots.forEach(function (dot) { map.removeLayer(dot); });
         });
         // Vide l'objet markers et la liste HTML
         Object.keys(markers).forEach(function (k) { delete markers[k]; });
@@ -31,6 +40,7 @@ try {
     });
 
     const map = L.map('map').setView([20, -30], 3);
+
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
         maxZoom: 19,
@@ -40,8 +50,18 @@ try {
     function toggleShark(name, visible) {
         if (visible) {
             markers[name].marker.addTo(map);
+            markers[name].polyline.addTo(map);
+
+            markers[name].dots.forEach(function (dot) {
+                dot.addTo(map);
+            });
         } else {
             map.removeLayer(markers[name].marker);
+            map.removeLayer(markers[name].polyline);
+
+            markers[name].dots.forEach(function (dot) {
+                map.removeLayer(dot);
+            });
         }
     }
 
@@ -82,8 +102,31 @@ try {
                     "⚖️ " + weight + " | 📏 " + length + "<br>" +
                     "📅 " + last.timestamp
                 );
+            var latlngs = shark.locations.map(function (loc) {
+                return [loc.lat, loc.lng];
+            });
 
-            markers[shark.name] = { marker: marker, lat: last.lat, lng: last.lng };
+            var color = colors[colorIndex % colors.length];
+            colorIndex++;
+
+            var polyline = L.polyline(latlngs, {
+                color: color,
+                weight: 3.5,
+                opacity: 1
+            }).addTo(map);
+
+            var dots = shark.locations.map(function (loc) {
+                return L.circleMarker([loc.lat, loc.lng], {
+
+                    radius: 5,
+                    color: color,
+                    fillColor: color,
+                    fillOpacity: 1,
+                    weight: 0
+                }).addTo(map);
+            });
+
+            markers[shark.name] = { marker: marker, polyline: polyline, dots: dots, lat: last.lat, lng: last.lng };
 
             // Create list item
             var li = document.createElement('li');
@@ -122,9 +165,13 @@ try {
             label.textContent = shark.name;
             label.htmlFor = 'cb-' + shark.name;
 
+            var dot = document.createElement('span');
+            dot.style.cssText = 'width:10px;height:10px;border-radius:50%;background:' + color + ';flex-shrink:0;';
+
             li.appendChild(checkbox);
             li.appendChild(label);
             li.appendChild(target);
+            li.appendChild(dot);
             list.appendChild(li);
         });
     }
@@ -151,11 +198,29 @@ try {
         });
     });
 
+    var darkLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; CartoDB',
+        maxZoom: 19
+    });
 
+    document.getElementById('btn-dark').addEventListener('click', function () {
+        document.body.classList.toggle('dark');
+        var isDark = document.body.classList.contains('dark');
+        this.textContent = isDark ? '☀️' : '🌙';
+        if (isDark) {
+            map.removeLayer(map._layers[Object.keys(map._layers)[0]]);
+            darkLayer.addTo(map);
+        } else {
+            map.removeLayer(darkLayer);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap',
+                maxZoom: 19
+            }).addTo(map);
+        }
+    });
 
 } catch (e) {
     document.getElementById('map-placeholder').style.display = 'flex';
     document.getElementById('map').style.display = 'none';
     console.error("Erreur d'initialisation de la carte :", e);
 }
-
