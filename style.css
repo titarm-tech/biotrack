@@ -268,3 +268,112 @@ body.dark #btn-dark {
     border-color: rgba(255, 255, 255, 0.15);
     color: var(--white);
 }
+
+.sidebar-filter {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--separator);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.filter-row label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--soft-gray);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    display: block;
+    margin-bottom: 0.3rem;
+}
+
+.filter-inputs {
+    display: flex;
+    gap: 0.4rem;
+}
+
+.filter-inputs input {
+    width: 50%;
+    padding: 0.3rem 0.5rem;
+    border: 1px solid var(--separator);
+    border-radius: 6px;
+    font-size: 0.85rem;
+    color: var(--text-dark);
+    background: var(--white);
+}
+
+.filter-inputs input:focus {
+    outline: none;
+    border-color: var(--ocean);
+}
+
+#btn-filter {
+    align-self: flex-end;
+    background: var(--ocean);
+    color: var(--white);
+    border: none;
+    border-radius: 6px;
+    padding: 0.3rem 0.8rem;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+#btn-filter:hover {
+    opacity: 0.85;
+}
+
+#btn-filter-reset {
+    background: none;
+    color: var(--soft-gray);
+    border: 1px solid var(--separator);
+    border-radius: 6px;
+    padding: 0.3rem 0.8rem;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+#btn-filter-reset:hover {
+    color: var(--ocean);
+    border-color: var(--ocean);
+}
+
+.filter-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.4rem;
+}
+
+.accordion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    border-bottom: 1px solid var(--separator);
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--soft-gray);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    user-select: none;
+}
+
+.accordion-header:hover {
+    background: var(--mist);
+}
+
+.acc-arrow {
+    transition: transform 0.2s;
+}
+
+.accordion.open .acc-arrow {
+    transform: rotate(90deg);
+}
+
+.accordion-body {
+    display: none;
+}
+
+.accordion.open .accordion-body {
+    display: block;
+}
